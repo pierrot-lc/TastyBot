@@ -1,5 +1,6 @@
 import os
 
+import discord
 from discord.ext.commands import Cog, Bot, Context, command
 from discord import Member
 
@@ -49,6 +50,9 @@ class TastyBot(Cog):
             channel = guild.system_channel
             if channel is not None and guild.name == 'Insane server':
                 await channel.send('Heyo ! Be ready for some tasty musics !')
+
+        activity = discord.Activity(type=discord.ActivityType.listening, name='some Tastycool songs')
+        await self.bot.change_presence(activity=activity)
 
     @Cog.listener()
     async def on_member_join(member: Member):
