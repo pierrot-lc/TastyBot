@@ -81,10 +81,6 @@ class TastyBot(Cog):
             else:
                 raise
 
-    @command()
-    async def tastycool(self, context: Context):
-        await context.send('Yeah my man!')
-
     @command(name='links')
     async def tastylinks(self, context: Context):
         """

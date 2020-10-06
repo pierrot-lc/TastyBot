@@ -78,6 +78,14 @@ class HandleSongs:
 
         return song, album, artist
 
+    def albums(self) -> dict:
+        """
+        Dictionnary mapping an album with its
+        songs (path).
+        """
+        albums = list(self.df_music['album'].unique())
+        return {a: self.album_playlist(a) for a in albums}
+
 
 class TastyListen(Cog):
     """
@@ -275,3 +283,18 @@ class TastyListen(Cog):
             playlist_desc += f'\t{song_number+1}. {infos[0]} - {infos[1]} - {infos[2]}\n'
 
         await context.send(playlist_desc)
+
+    @command()
+    async def tastycool(self, context: Context):
+        """
+        List the songs that I have in my bag.
+        """
+        desc = ''
+        for album_name, paths in self.song_handler.albums().items():
+            desc += f'{album_name}:\n'
+            for song_id, path in enumerate(paths):
+                song_name, _, _ = self.song_handler.infos(path)
+                desc += f'\t{song_id+1}. {song_name}\n'
+            desc += '\n'
+
+        await context.send(desc[:-1])  # Remove the last '\n'
