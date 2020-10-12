@@ -159,17 +159,6 @@ class TastyListen(Cog):
                     'a voice channel to listen to some Tasty songs !')
             return
 
-        gs = self.get_guildstate(context.guild.id)
-        if gs.voice_client and\
-                gs.voice_client.channel != voice.channel:
-            # Changing voice channel
-            if gs.voice_client.is_connected():
-                await gs.voice_client.disconnect()
-            gs.voice_client = None
-
-        if not gs.voice_client:
-            gs.voice_client = await voice.channel.connect()
-
         if album_name:
             album_name = ' '.join(album_name)
             playlist = self.song_handler.album_playlist(album_name)
@@ -180,6 +169,17 @@ class TastyListen(Cog):
         else:
             gs.playlist, album_name = self.song_handler.random_album()
             await context.send(f'Playing {album_name}.')
+
+        gs = self.get_guildstate(context.guild.id)
+        if gs.voice_client and\
+                gs.voice_client.channel != voice.channel:
+            # Changing voice channel
+            if gs.voice_client.is_connected():
+                await gs.voice_client.disconnect()
+            gs.voice_client = None
+
+        if not gs.voice_client:
+            gs.voice_client = await voice.channel.connect()
 
         if gs.voice_client.is_playing():
             gs.voice_client.stop()  # Go to after_play
