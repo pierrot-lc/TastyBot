@@ -187,7 +187,7 @@ class TastyListen(Cog):
 
         path = gs.playlist.pop(0)
         song_audiosource = discord.FFmpegPCMAudio(path)
-        song_audiosource = discord.PCMVolumeTransformer(song_audiosource, 0.3)
+        song_audiosource = discord.PCMVolumeTransformer(song_audiosource, 0.4)
 
         gs.voice_client.play(song_audiosource, after=lambda e: self.after_play(e, gs))
         gs.currently_playing = path
