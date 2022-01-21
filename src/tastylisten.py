@@ -114,8 +114,8 @@ class TastyListen(Cog):
         voice = context.author.voice
         guild = context.guild
         if voice is None:  # Sender isn't connected to a voice channel
-            await context.send('You have to be connected to'+
-                    'a voice channel to listen to some Tasty songs !')
+            await context.send('You have to be connected to' +
+                    ' a voice channel to listen to some Tasty songs !')
             return
 
         gs = self.get_guildstate(guild.id)
@@ -203,7 +203,7 @@ class TastyListen(Cog):
 
         if gs.voice_client is None or not gs.voice_client.is_connected() or\
                 not gs.voice_client.is_playing():
-            await context.send('I am not playing anything right not.')
+            await context.send('I am not playing anything right now.')
             return
 
         if voice is None or voice.channel != gs.voice_client.channel:
