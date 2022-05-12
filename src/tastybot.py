@@ -48,8 +48,10 @@ class TastyBot(Cog):
             print(f'Guild Members:\n - {members}')
 
             channel = guild.system_channel
-            if channel is not None and guild.name == 'Insane server':
-                await channel.send('Heyo ! Be ready for some tasty musics !')
+
+            # We do not send anything anymore
+            # if channel is not None and guild.name == 'Insane server':
+                # await channel.send('Heyo ! Be ready for some tasty musics !')
 
         activity = discord.Activity(type=discord.ActivityType.listening, name='some Tastycool songs')
         await self.bot.change_presence(activity=activity)

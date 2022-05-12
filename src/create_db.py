@@ -43,4 +43,14 @@ def create_csv(songs_path, csv_path):
 
 
 if __name__ == '__main__':
-    create_csv('songs', 'songs.csv')
+    import sys
+
+    if len(sys.argv) < 2:
+        print(f'Usage: {sys.argv[0]} [path_to_songs]')
+        sys.exit(0)
+
+    path = sys.argv[1]
+    if path[-1] == '/':
+        path = path[:-1]  # Remove pending '/' if there is one
+
+    create_csv(sys.argv[1], 'songs.csv')
