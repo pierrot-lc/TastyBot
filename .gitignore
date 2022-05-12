@@ -2,3 +2,4 @@ err.log
 __pycache__/
 songs/
 songs.csv
+.env

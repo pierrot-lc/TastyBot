@@ -8,13 +8,12 @@ import pandas as pd
 
 def read_dir(path, album, data):
     for f in os.listdir(path):
-        if os.path.isfile(os.path.join(path, f)) and f.endswith('.wav'):
-            song_name = f.split('.wav')[0]
-            if ' - ' in song_name:
-                song_name = song_name.split(' - ')
-                song_id, song_name = int(song_name[0]), song_name[1]
-            else:
-                song_id = None
+        if os.path.isfile(os.path.join(path, f)) and f.endswith('.mp3'):
+            song_info = f.split('.mp3')[0]
+            song_info = song_info.split('0')[1]
+            song_info = song_info.split(' ')
+            song_id, song_name = int(song_info[0]), song_info[1:]
+            song_name = ' '.join(song_name)
 
             data['artist'].append('Tastycool')
             data['album'].append(album)
@@ -44,4 +43,4 @@ def create_csv(songs_path, csv_path):
 
 
 if __name__ == '__main__':
-    create_csv('../songs', '../songs.csv')
+    create_csv('songs', 'songs.csv')

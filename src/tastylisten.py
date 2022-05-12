@@ -289,7 +289,8 @@ class TastyListen(Cog):
         """
         List the songs that I have in my bag.
         """
-        desc = ''
+        desc = '```\n'
+
         for album_name, paths in self.song_handler.albums().items():
             desc += f'{album_name}:\n'
             for song_id, path in enumerate(paths):
@@ -297,4 +298,5 @@ class TastyListen(Cog):
                 desc += f'\t{song_id+1}. {song_name}\n'
             desc += '\n'
 
-        await context.send(desc[:-1])  # Remove the last '\n'
+        desc += '```'
+        await context.send(desc)  # Remove the last '\n'

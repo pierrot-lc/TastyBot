@@ -96,10 +96,11 @@ class TastyBot(Cog):
         SPOTIFY_LINK = os.getenv('TASTY_SPOTIFY')
         DEEZER_LINK = os.getenv('TASTY_DEEZER')
 
-        msg = 'Tasty links :\n'
+        msg = '```\nTasty links :\n'
         msg += f'\t- [Facebook link] <{FB_LINK}>\t\t-- all tasty news\n'
         msg += f'\t- [Official website] <{PRODUCT_LINK}>\t\t-- buy their products\n'
         msg += f'\t- [Youtube channel] <{YT_LINK}>\n'
         msg += f'\t- [Spotify] <{SPOTIFY_LINK}>\n'
-        msg += f'\t- [Deezer] <{DEEZER_LINK}>'
+        msg += f'\t- [Deezer] <{DEEZER_LINK}>\n'
+        msg += '```'
         await context.send(msg)
