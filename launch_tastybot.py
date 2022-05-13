@@ -5,8 +5,10 @@ from dotenv import load_dotenv
 from discord.ext.commands import Bot
 
 from src.tastybot import TastyBot
-from src.tastylisten import TastyListen
 from src.create_db import create_csv
+from src.voice.voice_manager import VoiceManager
+from src.voice.tastylisten import TastyListen
+from src.voice.youtube_bot import YoutubeBot
 
 
 if len(sys.argv) > 1:
@@ -34,5 +36,11 @@ SPLIT_TOKEN = '::'
 
 bot = Bot(command_prefix=PREFIX)
 bot.add_cog(TastyBot(bot))
-bot.add_cog(TastyListen(bot))
+
+# Voice bots
+voice_manager = VoiceManager(bot)
+bot.add_cog(voice_manager)
+bot.add_cog(TastyListen(bot, voice_manager))
+bot.add_cog(YoutubeBot(bot, voice_manager))
+
 bot.run(TOKEN)
