@@ -65,7 +65,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data['entries'][0]
 
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        print(data.keys())
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 
@@ -89,16 +88,25 @@ class YoutubeBot(Cog):
             return  # Connexion to voice client failed
 
         guild_id = context.guild.id
+
+        loop = self.bot.loop
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=False))
+        if '_type' in data and data['_type'] == 'playlist':
+            data = data['entries'][0]
+
+        info = f'{data["title"]}'
         self.voice_manager.add_to_playlist(
-            guild_id,
+            context,
             self.get_audiosource,
             [url],
         )
 
         if not self.voice_manager.is_playing(guild_id):
             await self.voice_manager.play_next(guild_id)
+        else:
+            await context.send(f'Added to playlist: {info}')
 
     async def get_audiosource(self, url: str) -> tuple[discord.FFmpegPCMAudio, str]:
         audio_source = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-        infos = f'{audio_source.data["title"]} - {audio_source["channel"]}'
+        infos = f'{audio_source.data["title"]}'
         return audio_source, infos

@@ -84,7 +84,7 @@ class TastyListen(Cog):
         self.voice_manager.empty_playlist(guild_id)
 
         for path in self.song_handler.random_playlist():
-            self.voice_manager.add_to_playlist(guild_id, get_audiosource, [path])
+            self.voice_manager.add_to_playlist(context, get_audiosource, [path, self.song_handler])
 
         await self.voice_manager.play_next(guild_id)
 
@@ -116,7 +116,7 @@ class TastyListen(Cog):
 
         self.voice_manager.empty_playlist(guild_id)
         for path in playlist:
-            self.voice_manager.add_to_playlist(guild_id, get_audiosource, [path])
+            self.voice_manager.add_to_playlist(context, get_audiosource, [path, self.song_handler])
 
         await self.voice_manager.play_next(guild_id)
 
@@ -137,9 +137,11 @@ class TastyListen(Cog):
         await context.send(desc)  # Remove the last '\n'
 
 
-async def get_audiosource(path: str) -> tuple[discord.FFmpegPCMAudio, str]:
+async def get_audiosource(path: str, song_handler: HandleSongs) -> tuple[discord.FFmpegPCMAudio, str]:
     """Read the file and return the corresponding audio source.
     """
     audio_source = discord.FFmpegPCMAudio(path)
     audio_source = discord.PCMVolumeTransformer(audio_source, 0.3)
-    return audio_source, path
+    infos = song_handler.infos(path)
+    infos = ' - '.join(infos)
+    return audio_source, infos

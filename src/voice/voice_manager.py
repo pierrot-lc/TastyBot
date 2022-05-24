@@ -81,7 +81,7 @@ class VoiceManager(Cog):
         if gs.voice_client:
             if gs.voice_client.channel != voice.channel or not gs.voice_client.is_connected():
                 # We have to change the channel the bot is connected to
-                gs.disconnect()  # Disconnect the bot
+                await gs.disconnect()  # Disconnect the bot
 
         if gs.voice_client is None:  # Connect the bot to the author's channel
             gs.voice_client = await voice.channel.connect()
@@ -134,9 +134,9 @@ class VoiceManager(Cog):
         gs = self.get_guildstate(guild_id)
         gs.playlist = []
 
-    def add_to_playlist(self, guild_id: int, fn: callable, args: list):
-        gs = self.get_guildstate(guild_id)
-        gs.playlist.append((fn, args))
+    def add_to_playlist(self, context: Context, fn: callable, args: list):
+        gs = self.get_guildstate(context.guild.id)
+        gs.playlist.append((context, fn, args))
 
     def is_playing(self, guild_id: int) -> bool:
         gs = self.get_guildstate(guild_id)
@@ -159,11 +159,11 @@ class VoiceManager(Cog):
             gs.voice_client.stop()  # Calls after_play => properly clean up ressources and then calls play_next
             return
 
-        fn, args = gs.playlist.pop(0)
+        context, fn, args = gs.playlist.pop(0)
         audio_source, infos = await fn(*args)
         gs.voice_client.play(audio_source, after=lambda e: self.after_play(e, guild_id))
         gs.currently_playing = infos
-        await context.send(f'Now playing: {infos}')
+        await context.send(f'Now playing: `{infos}`')
 
     def after_play(self, error, guild_id: int):
         """Called when a song is finished.
@@ -172,13 +172,11 @@ class VoiceManager(Cog):
         """
         gs = self.get_guildstate(guild_id)
         if not gs.voice_client or not gs.voice_client.is_connected():
-            gs.disconnect()
             return  # Nothing to do
 
         if gs.playlist == []:  # Nothing to play next
             coro = gs.reset()
             asyncio.run_coroutine_threadsafe(coro, self.bot.loop)
-            gs.disconnect()
             return
 
         # Cleanup ending source
