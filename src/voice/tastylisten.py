@@ -120,7 +120,6 @@ class TastyListen(Cog):
 
         await self.voice_manager.play_next(guild_id)
 
-
     @command()
     async def tastycool(self, context: Context):
         """List the songs that I have in my bag.

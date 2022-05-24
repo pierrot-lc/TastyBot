@@ -78,9 +78,10 @@ class VoiceManager(Cog):
 
         gs = self.get_guildstate(guild.id)
 
-        if gs.voice_client and gs.voice_client.channel != voice.channel:
-            # We have to change the channel the bot is connected to
-            gs.disconnect()  # Disconnect the bot
+        if gs.voice_client:
+            if gs.voice_client.channel != voice.channel or not gs.voice_client.is_connected():
+                # We have to change the channel the bot is connected to
+                gs.disconnect()  # Disconnect the bot
 
         if gs.voice_client is None:  # Connect the bot to the author's channel
             gs.voice_client = await voice.channel.connect()
@@ -162,8 +163,7 @@ class VoiceManager(Cog):
         audio_source, infos = await fn(*args)
         gs.voice_client.play(audio_source, after=lambda e: self.after_play(e, guild_id))
         gs.currently_playing = infos
-        # await context.send(f'Now playing: {infos}')
-
+        await context.send(f'Now playing: {infos}')
 
     def after_play(self, error, guild_id: int):
         """Called when a song is finished.
@@ -171,13 +171,14 @@ class VoiceManager(Cog):
         The bot either plays the next song if there is one, or disconnect.
         """
         gs = self.get_guildstate(guild_id)
-        if not gs.voice_client or\
-                not gs.voice_client.is_connected():
+        if not gs.voice_client or not gs.voice_client.is_connected():
+            gs.disconnect()
             return  # Nothing to do
 
         if gs.playlist == []:  # Nothing to play next
             coro = gs.reset()
             asyncio.run_coroutine_threadsafe(coro, self.bot.loop)
+            gs.disconnect()
             return
 
         # Cleanup ending source
