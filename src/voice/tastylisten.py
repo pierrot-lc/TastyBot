@@ -73,7 +73,9 @@ class TastyListen(Cog):
 
     @command(name='music')
     async def tastymusic(self, context: Context):
-        """Listen to a random playlist.
+        """Listen to a random playlist of Tastycool Songs.
+
+        You have to be connected to a voice channel.
         """
         if not await self.voice_manager.connect(context):
             return  # Connexion to voice client failed
@@ -95,6 +97,7 @@ class TastyListen(Cog):
         """Listen to a tasty album.
 
         If no arguments are given, a random album is being played.
+        You have to be connected to a voice channel.
         """
         if not await self.voice_manager.connect(context):
             return  # Connexion to voice client failed
@@ -120,8 +123,7 @@ class TastyListen(Cog):
 
     @command()
     async def tastycool(self, context: Context):
-        """
-        List the songs that I have in my bag.
+        """List the songs that I have in my bag.
         """
         desc = '```\n'
 

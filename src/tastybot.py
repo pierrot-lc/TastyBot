@@ -6,17 +6,14 @@ from discord import Member
 
 
 class TastyBot(Cog):
-    """
-    Basic commands and reaction.
+    """Basic commands and reaction.
     """
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @Cog.listener()
     async def on_member_join(self, member: Member):
-        """
-        Called when a member join a
-        guild I am connected to.
+        """Called when a member join a guild I am connected to.
 
         Sends a little welcoming message randomly choosen.
         """
@@ -35,8 +32,7 @@ class TastyBot(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        """
-        Called when the tasty bot is ready.
+        """Called when the tasty bot is ready.
 
         Print debug infos.
         """
@@ -58,9 +54,7 @@ class TastyBot(Cog):
 
     @Cog.listener()
     async def on_member_join(member: Member):
-        """
-        Sends a little welcoming message
-        randomly choosen.
+        """Sends a little welcoming message randomly choosen.
         """
         channel = member.guild.system_channel
         if not channel and len(member.guild.text_channels) > 0:
@@ -77,8 +71,7 @@ class TastyBot(Cog):
 
     @Cog.listener()
     async def on_error(self, event, *args, **kwargs):
-        """
-        Log 'on_message' errors.
+        """Log 'on_message' errors.
         Raise the others.
         """
         with open('../err.log', 'a') as f:
@@ -89,8 +82,7 @@ class TastyBot(Cog):
 
     @command(name='links')
     async def tastylinks(self, context: Context):
-        """
-        To get to know more about Tastycool.
+        """To get to know more about Tastycool.
         """
         FB_LINK = os.getenv('TASTY_FB')
         PRODUCT_LINK = os.getenv('TASTY_PRODUCT')

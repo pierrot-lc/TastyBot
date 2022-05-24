@@ -162,12 +162,13 @@ class VoiceManager(Cog):
         audio_source, infos = await fn(*args)
         gs.voice_client.play(audio_source, after=lambda e: self.after_play(e, guild_id))
         gs.currently_playing = infos
-        # await context.send(f'Now playing: {player.title}')
+        # await context.send(f'Now playing: {infos}')
+
 
     def after_play(self, error, guild_id: int):
         """Called when a song is finished.
-        The bot either plays the next song if there is one,
-        or disconnect.
+
+        The bot either plays the next song if there is one, or disconnect.
         """
         gs = self.get_guildstate(guild_id)
         if not gs.voice_client or\
